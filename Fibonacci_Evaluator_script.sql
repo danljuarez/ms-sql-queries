@@ -10,31 +10,31 @@
 -- ***********************************************************************************
 SET NOCOUNT ON;
 GO
+
+PRINT '*** Resetting SQL environment ***';
 SET NOEXEC OFF;
 GO
 
 -- Declare max values for Fibonacci generation
-:setvar maxFibValue 60
+:setvar maxFibonacciValue 60
 
 -- Declare name for a list of numbers table that will be evaluated numbers to determine Fibonacci
-:setvar fiboResultTableName "NumberList"
+:setvar FibonacciResults "NumberList"
 
 -- Declare database variable name
 :setvar DatabaseName "FibonacciDb"
 
-PRINT '';
-PRINT 'Calculate and determine Fibonacci numbers from a list of numbers less than $(maxFibValue)';
+PRINT 'Calculate and determine Fibonacci numbers from a list of numbers less than $(maxFibonacciValue)';
 GO
 
-PRINT '';
 PRINT 'Started - ' + CONVERT(varchar, GETDATE(), 121);
 GO
 
-IF $(maxFibValue) < 0
+IF $(maxFibonacciValue) < 0
 	BEGIN
 		PRINT '';
 		PRINT '*** Error!';
-		RAISERROR( '*** MaxFibonacchi Value cannot be less than 0', 20, -1) WITH NOWAIT, LOG;
+		RAISERROR( '*** MaxFibonacci Value cannot be less than 0', 20, -1) WITH NOWAIT, LOG;
 		SET NOEXEC ON;
 	END
 GO
@@ -43,10 +43,16 @@ USE [master];
 GO
 
 -- Drop Database for this sample if already exist
-PRINT '';
-PRINT '*** Dropping $(DatabaseName) sample database if already exist'
+PRINT '*** Dropping $(DatabaseName) sample database if already exist';
 IF EXISTS (SELECT [name] FROM [master].[sys].[databases] WHERE [name] = N'$(DatabaseName)')
-   DROP DATABASE $(DatabaseName);
+	BEGIN
+		DROP DATABASE $(DatabaseName);
+		PRINT '*** Database $(DatabaseName) dropped successfully.';
+	END
+ELSE
+	BEGIN
+		PRINT '*** Database $(DatabaseName) does not exist.';
+	END
 GO
 
 -- If the database has any other open connections close the network connection.
@@ -58,7 +64,6 @@ IF @@ERROR = 3702
 GO
 
 -- Create Database
-PRINT '';
 PRINT '*** Creating database: $(DatabaseName)';
 CREATE DATABASE $(DatabaseName);
 GO
@@ -73,55 +78,47 @@ IF NOT EXISTS (SELECT TOP 1 1 FROM sys.databases WHERE name = N'$(DatabaseName)'
 	END
 GO
 
-PRINT '';
-PRINT '*** Drop temporary table for this sample if already exist';
-IF OBJECT_ID('tempdb..#FibonacchiValues') IS NOT NULL
-	DROP TABLE #FibonacchiValues;
+-- Drop temporary table for this sample if already exist
+IF OBJECT_ID('tempdb..#FibonacciValues') IS NOT NULL
+	BEGIN
+		DROP TABLE #FibonacciValues;
+		PRINT '*** Temporary table #FibonacciValues dropped successfully.';
+	END
 GO
 
-PRINT '';
 PRINT '*** Create temporary table for Fibonacci values';
-CREATE TABLE #FibonacchiValues (
+CREATE TABLE #FibonacciValues (
 	Indx INT,
 	Vals INT
 	UNIQUE NONCLUSTERED (Indx)
 );
 GO
 
-DECLARE @maxFiboVal INT = $(maxFibValue);
+DECLARE @maxFibonacciValue INT = $(maxFibonacciValue);
 DECLARE @cntr INT = 0;
-DECLARE @isNotFiboBase BIT = 'FALSE';
 DECLARE @n1 INT;
 DECLARE @n2 INT;
 
-PRINT '';
 PRINT '*** Assign Fibonacci values';
-WHILE @cntr <= @maxFiboVal + 1
+WHILE @cntr <= @maxFibonacciValue + 1
 	BEGIN
-		IF @isNotFiboBase = 'TRUE'
+		IF @cntr <= 1
 			BEGIN
-			   -- Get values for Fibonacci numbers
-			   SET @n1 = (SELECT Vals FROM #FibonacchiValues WHERE Indx = (@cntr - 1));
-			   SET @n2 = (SELECT Vals FROM #FibonacchiValues WHERE Indx = (@cntr - 2));
-
-			   -- Break loop if Fibonacci number is greater than maxFibValue
-			   IF (@n1 + @n2) > @maxFiboVal
-				   BREAK;
-
-			   -- Insert Fibonacci number
-			   INSERT INTO #FibonacchiValues
-					  VALUES (@cntr, (@n1 + @n2));
+				INSERT INTO #FibonacciValues (Indx, Vals)
+					   VALUES (@cntr, @cntr);
 			END
 		ELSE
 			BEGIN
-			   IF @cntr > @maxFiboVal
-				  BREAK;
+				SET @n1 = (SELECT Vals FROM #FibonacciValues WHERE Indx = (@cntr - 1));
+				SET @n2 = (SELECT Vals FROM #FibonacciValues WHERE Indx = (@cntr - 2));
 
-			   INSERT INTO #FibonacchiValues
-					  VALUES (@cntr, @cntr);
-			   IF @cntr = 1
-				  SET @isNotFiboBase = 'TRUE';
+				IF (@n1 + @n2) > @maxFibonacciValue
+					BREAK;
+
+				INSERT INTO #FibonacciValues (Indx, Vals)
+					   VALUES (@cntr, (@n1 + @n2));
 			END
+
 		SET @cntr = @cntr + 1;
 	END
 GO
@@ -129,67 +126,67 @@ GO
 USE [$(DatabaseName)];
 GO
 
-PRINT '';
-PRINT '*** Drop $(fiboResultTableName) table if already exist';
-DROP TABLE IF EXISTS [dbo].[$(fiboResultTableName)];
+PRINT '*** Drop $(FibonacciResults) table if already exist';
+DROP TABLE IF EXISTS [dbo].[$(FibonacciResults)];
 GO
 
-PRINT '';
-PRINT '*** Create $(fiboResultTableName) sample table to evaluate';
-CREATE TABLE [dbo].[$(fiboResultTableName)](
+PRINT '*** Create $(FibonacciResults) table to store Fibonacci results';
+CREATE TABLE [dbo].[$(FibonacciResults)](
 	[Numbers] [INT] NOT NULL,
-	[Fibo Status] [NVARCHAR](100) NULL
+	[FibonacciStatus] [NVARCHAR](100) NULL
 ) ON [PRIMARY];
 GO
 
-PRINT '';
-PRINT '*** Add sample numbers to evaluate';
-DECLARE @maxFiboVal INT = $(maxFibValue);
+-- Add sample numbers to evaluate
+DECLARE @maxFibonacciValue INT = $(maxFibonacciValue);
 DECLARE @cnt INT = 0;
 
-SET @cnt = 0;
-WHILE @cnt <= @maxFiboVal
+PRINT '*** Add sample numbers to evaluate...';
+WHILE @cnt <= @maxFibonacciValue
 	BEGIN
-		INSERT INTO [dbo].[NumberList] (Numbers)
+		INSERT INTO [dbo].[$(FibonacciResults)] ([Numbers])
 			   VALUES (@cnt);
 		SET @cnt = @cnt + 1;
 	END
 GO
 
-PRINT '';
-PRINT '*** Update $(fiboResultTableName) table with label [Is Fibonacci number] when is the case';
+PRINT '*** Update $(FibonacciResults) table with label [Is Fibonacci number] when is the case';
 UPDATE
-	[dbo].[$(fiboResultTableName)]
+	[dbo].[$(FibonacciResults)]
 SET
-	[Fibo Status] = '[Is a Fibonacci number]'
+	[FibonacciStatus] = '[Is a Fibonacci number]'
 	FROM
-		[dbo].[$(fiboResultTableName)]
+		[dbo].[$(FibonacciResults)]
 	INNER JOIN
-		#FibonacchiValues
-	ON ([dbo].[$(fiboResultTableName)].[Numbers] = #FibonacchiValues.Vals)
+		#FibonacciValues
+	ON ([dbo].[$(FibonacciResults)].[Numbers] = #FibonacciValues.Vals)
 GO
 
-PRINT '';
+-- Show the results
 PRINT '*** Show the results';
 SELECT *
-	FROM $(fiboResultTableName)
+	FROM $(FibonacciResults)
 GO
 
-PRINT '';
-PRINT '*** Return SQL to it''s initial state before running this script. ***';
-PRINT '*** Drop temporary Database for this sample if exists';
-IF OBJECT_ID('tempdb..#FibonacchiValues') IS NOT NULL
-	DROP TABLE #FibonacchiValues;
+-- Clean up
+PRINT 'Cleaning up...';
+-- Drop temporary database objects
+IF OBJECT_ID('tempdb..#FibonacciValues') IS NOT NULL
+	BEGIN
+		PRINT '*** Dropping temporary table #FibonacchiValues ***';
+		DROP TABLE #FibonacciValues;
+	END
 GO
 
+-- Switch to the master database
 USE [master];
 GO
 
-PRINT '';
+-- Drop sample database if it exists
 PRINT '*** Drop sample database $(DatabaseName) if exists';
 IF EXISTS (SELECT [name] FROM [master].[sys].[databases] WHERE [name] = N'$(DatabaseName)')
-   DROP DATABASE $(DatabaseName);
-GO
-
-SET NOEXEC OFF;
+	BEGIN
+		PRINT '*** Dropping sample database $(DatabaseName) ***';
+		DROP DATABASE $(DatabaseName);
+	END
 GO
