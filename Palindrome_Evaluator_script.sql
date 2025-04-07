@@ -10,6 +10,8 @@
 -- ***********************************************************************************
 SET NOCOUNT ON;
 GO
+
+PRINT '*** Resetting SQL environment ***';
 SET NOEXEC OFF;
 GO
 
@@ -24,11 +26,9 @@ GO
 -- determine if a string is Palindrome
 :setvar PalindromeFunc "ufnIfPalindromeString"
 
-PRINT '';
 PRINT 'Calculate and determine Palindrome string (word, number, phrase or other sequence of symbols that are the same when reverted) from a list of strings provided';
 GO
 
-PRINT '';
 PRINT 'Started - ' + CONVERT(VARCHAR, GETDATE(), 121);
 GO
 
@@ -37,7 +37,6 @@ GO
 
 
 -- Drop Database for this sample if already exist
-PRINT '';
 PRINT '*** Dropping $(DatabaseName) sample database if already exist';
 IF EXISTS (SELECT [name] FROM [master].[sys].[databases] WHERE [name] = N'$(DatabaseName)')
 	DROP DATABASE $(DatabaseName);
@@ -51,12 +50,11 @@ IF @@ERROR = 3702
 GO
 
 -- Create Database
-PRINT '';
 PRINT '*** Creating database: $(DatabaseName)';
 CREATE DATABASE $(DatabaseName);
 GO
 
-/* Check for database if it doesn't exists, do not run the rest of the script */
+-- Check for database if it doesn't exists, do not run the rest of the script
 IF NOT EXISTS (SELECT TOP 1 1 FROM sys.databases WHERE name = N'$(DatabaseName)')
 	BEGIN
 		 PRINT '************************************************************************************************************************************************************'
@@ -70,12 +68,10 @@ USE $(DatabaseName);
 GO
 
 -- Drop Function if already exists
-PRINT '';
 PRINT '*** Drop user defined function: $(PalindromeFunc) if already exists';
 DROP FUNCTION IF EXISTS [dbo].[$(PalindromeFunc)];
 GO
 
-PRINT '';
 PRINT '*** Create user defined function: $(PalindromeFunc)';
 GO
 
@@ -83,31 +79,18 @@ CREATE FUNCTION [dbo].[$(PalindromeFunc)](@string [NVARCHAR](50))
 RETURNS BIT
 AS
 BEGIN
-	DECLARE @wkString NVARCHAR(50) = TRIM(@string);
-	DECLARE @stringLength INT = LEN(@wkString);
-	DECLARE @revertedString NVARCHAR(50) = '';
-	DECLARE @isPalindrome BIT = 'FALSE';
-
-	WHILE @stringLength >= 1
-		BEGIN
-			SET @revertedString = @revertedString + SUBSTRING(@wkString, @stringLength, 1);
-
-			SET @stringLength = @stringLength - 1;
-		END
-
-	IF LOWER(@revertedString) = LOWER(@wkString)
-		SET @isPalindrome = 'TRUE';
-
-	RETURN @isPalindrome;
+    DECLARE @revertedString NVARCHAR(50) = REVERSE(@string);
+    RETURN CASE
+        WHEN LOWER(@revertedString) = LOWER(@string) THEN 1
+        ELSE 0
+    END;
 END;
 GO
 
-PRINT '';
 PRINT '*** Drop $(StringsTableName) table if already exist';
 DROP TABLE IF EXISTS [dbo].[$(StringsTableName)]
 GO
 
-PRINT '';
 PRINT '*** Create $(StringsTableName) sample table to evaluate';
 CREATE TABLE [dbo].[$(StringsTableName)](
 	[String] [NVARCHAR](50) NOT NULL,
@@ -115,66 +98,65 @@ CREATE TABLE [dbo].[$(StringsTableName)](
 ) ON [PRIMARY];
 GO
 
--- Inserting sample strings
-PRINT '';
 PRINT '*** Adding sample strings in table $(StringsTableName)';
 GO
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Finest')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Deified')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Redder')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Keyword')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Humidity')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Interviews')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Mercury')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Racecar')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Example')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Geographical')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Kayak')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Group')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Discovered')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('123')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Tenet')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Stream')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Kilometers')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Vision')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('[{{[')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Noon')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Interpretation')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Deed')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Mom')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('NeverOddOrEven')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('TacoCat')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Orchestra')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Nun')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Partnership')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Hospitality')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Wow')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Anna')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Dad')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Increase')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('WasItACatISaw')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Rotator')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Madam')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Jeans')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Radar')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('12521')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('DoGeeseSeeGod')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Repaper')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Diagram')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Acoustic')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('People')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Knowledge')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Level')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Civic')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Longitude')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Coupon')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Hannah')
-INSERT [dbo].[$(StringsTableName)](String) VALUES('Refer')
+INSERT [dbo].[$(StringsTableName)]([String])
+	VALUES
+		('Finest'),
+		('Deified'),
+		('Redder'),
+		('Keyword'),
+		('Humidity'),
+		('Interviews'),
+		('Mercury'),
+		('Racecar'),
+		('Example'),
+		('Geographical'),
+		('Kayak'),
+		('Group'),
+		('Discovered'),
+		('123'),
+		('Tenet'),
+		('Stream'),
+		('Kilometers'),
+		('Vision'),
+		('[{{['),
+		('Noon'),
+		('Interpretation'),
+		('Deed'),
+		('Mom'),
+		('NeverOddOrEven'),
+		('TacoCat'),
+		('Orchestra'),
+		('Nun'),
+		('Partnership'),
+		('Hospitality'),
+		('Wow'),
+		('Anna'),
+		('Dad'),
+		('Increase'),
+		('WasItACatISaw'),
+		('Rotator'),
+		('Madam'),
+		('Jeans'),
+		('Radar'),
+		('12521'),
+		('DoGeeseSeeGod'),
+		('Repaper'),
+		('Diagram'),
+		('Acoustic'),
+		('People'),
+		('Knowledge'),
+		('Level'),
+		('Civic'),
+		('Longitude'),
+		('Coupon'),
+		('Hannah'),
+		('Refer')
 
 GO
 
 -- Determine which strings are Palindrome
-PRINT '';
 PRINT '*** Update $(StringsTableName) table with label [Is a Palindrome string] when is the case';
 UPDATE
 	[dbo].[$(StringsTableName)]
@@ -183,34 +165,36 @@ SET
 	FROM
 		[dbo].[$(StringsTableName)]
 	WHERE
-		[dbo].[$(PalindromeFunc)]([dbo].[$(StringsTableName)].[String]) = 'TRUE'
+		[dbo].[$(PalindromeFunc)]([dbo].[$(StringsTableName)].[String]) = 1
 GO
 
-PRINT '';
 PRINT '*** Show the results';
 SELECT *
 	FROM [dbo].[$(StringsTableName)]
 GO
 
-PRINT '';
+-- Clean up
+PRINT 'Cleaning up...';
 PRINT '*** Return SQL to it''s initial state before running this script';
-GO
-
-PRINT '';
+-- Drop sample user defined function if exist
 PRINT '*** Drop user defined function: $(PalindromeFunc) if exists';
 DROP FUNCTION IF EXISTS [dbo].[$(PalindromeFunc)];
 GO
 
-PRINT '';
+-- Drop sample table if exist
 PRINT '*** Drop $(StringsTableName) table if exist';
 DROP TABLE IF EXISTS [dbo].[$(StringsTableName)]
 GO
 
+-- Switch to the master database
 USE [master];
 GO
 
-PRINT '';
+-- Drop sample database if it exists
 PRINT '*** Drop sample database $(DatabaseName) if exists';
 IF EXISTS (SELECT [name] FROM [master].[sys].[databases] WHERE [name] = N'$(DatabaseName)')
-   DROP DATABASE $(DatabaseName);
+	BEGIN
+		PRINT '*** Dropping sample database $(DatabaseName) ***';
+		DROP DATABASE $(DatabaseName);
+	END
 GO
