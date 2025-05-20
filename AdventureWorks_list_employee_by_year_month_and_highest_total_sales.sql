@@ -14,44 +14,44 @@ GO
 SELECT 
     sp.BusinessEntityID AS SalesPersonID,
     p.FirstName,
-	p.LastName,
-	e.JobTitle AS Title,
-	d.[Name] AS Department,
-	e.Gender,
+    p.LastName,
+    e.JobTitle AS Title,
+    d.[Name] AS Department,
+    e.Gender,
     YEAR(soh.OrderDate) AS OrderYear,
     MONTH(soh.OrderDate) AS OrderMonth,
     COUNT(soh.SalesOrderID) AS TotalSales
 FROM 
-	Sales.SalesOrderHeader AS soh
-	INNER JOIN 
-		Sales.SalesPerson AS sp 
-			ON soh.SalesPersonID = sp.BusinessEntityID
-    INNER JOIN 
-		HumanResources.Employee AS e 
-			ON sp.BusinessEntityID = e.BusinessEntityID
-    INNER JOIN 
-		Person.Person AS p 
-			ON e.BusinessEntityID = p.BusinessEntityID
-	INNER JOIN 
-		HumanResources.EmployeeDepartmentHistory AS edh 
-			ON e.BusinessEntityID = edh.BusinessEntityID
-			   AND edh.EndDate IS NULL  -- Only current department
-	INNER JOIN 
-		HumanResources.Department AS d 
-			ON edh.DepartmentID = d.DepartmentID
-GROUP BY 
+    Sales.SalesOrderHeader AS soh
+    INNER JOIN
+	Sales.SalesPerson AS sp
+	    ON soh.SalesPersonID = sp.BusinessEntityID
+    INNER JOIN
+	HumanResources.Employee AS e
+	    ON sp.BusinessEntityID = e.BusinessEntityID
+    INNER JOIN
+	Person.Person AS p
+	    ON e.BusinessEntityID = p.BusinessEntityID
+    INNER JOIN
+	HumanResources.EmployeeDepartmentHistory AS edh
+	    ON e.BusinessEntityID = edh.BusinessEntityID
+	       AND edh.EndDate IS NULL  -- Only current department
+    INNER JOIN
+	HumanResources.Department AS d
+	    ON edh.DepartmentID = d.DepartmentID
+GROUP BY
     sp.BusinessEntityID,
     p.FirstName,
     p.LastName,
-	e.JobTitle,
-	d.[Name],
-	e.Gender,
+    e.JobTitle,
+    d.[Name],
+    e.Gender,
     YEAR(soh.OrderDate),
     MONTH(soh.OrderDate)
-ORDER BY 
-    OrderYear, 
+ORDER BY
+    OrderYear,
     OrderMonth,
-	TotalSales DESC;
+    TotalSales DESC;
 
 
 -- To verify the accuracy of certain totals, execute the following query:
