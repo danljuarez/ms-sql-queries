@@ -39,4 +39,4 @@ To run these scripts containing script variables (`:setvar`) in your [SSMS](http
 
 
 ## Important Note
-Please note that even if these scripts generate their own databases, tables, temporary tables, user-defined functions and then clean them up after execution is complete, be mindful that you should `run` these scripts in an isolated SQL server environment.
+Please note that even if some of these scripts generate their own databases, tables, temporary tables, and user-defined functions — and clean them up after execution — you should still `run` them in an isolated SQL Server environment.
