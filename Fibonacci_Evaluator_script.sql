@@ -166,7 +166,6 @@ GO
 PRINT '*** Show the results';
 SELECT *
   FROM $(FibonacciResults)
-GO
 
 -- Clean up
 PRINT 'Cleaning up...';
