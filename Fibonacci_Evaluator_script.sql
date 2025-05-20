@@ -153,8 +153,8 @@ GO
 PRINT '*** Update $(FibonacciResults) table with label [Is Fibonacci number] when is the case';
 UPDATE
   [dbo].[$(FibonacciResults)]
-SET
-  [FibonacciStatus] = '[Is a Fibonacci number]'
+  SET
+     [FibonacciStatus] = '[Is a Fibonacci number]'
   FROM
      [dbo].[$(FibonacciResults)]
   INNER JOIN
