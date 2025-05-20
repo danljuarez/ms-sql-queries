@@ -23,6 +23,15 @@ Palindrome_Evaluator_script.sql
 Result: <br/>
 ![](./screenshots/screenshot-02.jpg)
 
+## AdventureWorks – SQL Query Demos
+- Retrieve a list of all employees with their ID, name, job title, department, gender, and corresponding highest total sales by year and month. 
+
+    **Take a Look**:
+
+    Filename:
+    ```txt
+    AdventureWorks_list_employee_by_year_month_and_highest_total_sales.sql
+    ```
 
 ## Getting Started
 To run these scripts containing script variables (`:setvar`) in your [SSMS](https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms) environment, you should first enable `SQLCMD Mode` as shown in the following screenshot:
