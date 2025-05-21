@@ -24,7 +24,7 @@ Result: <br/>
 ![](./screenshots/screenshot-02.jpg)
 
 ## AdventureWorks – SQL Query Demos
-- Retrieve a list of all employees with their ID, name, job title, department, gender, and corresponding highest total sales by year and month. 
+- List all employees with their ID, name, job title, department, gender, and corresponding highest total sales by year and month.
 
     **Take a Look**:
 

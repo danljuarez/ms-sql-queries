@@ -1,6 +1,5 @@
 -- ***********************************************************************************
 -- AUTHOR: Daniel Juarez
--- CREATION DATE: 03/18/2025
 -- CODE CHALLENGE: Create a list of employees including ID, name, job title, department, and gender, along with their highest total sales by year and month.
 -- Please review how the code has been structured and implemented to follow best practices and improve readability.
 -- **************
@@ -54,7 +53,7 @@ ORDER BY
     TotalSales DESC;
 
 
--- To verify the accuracy of certain totals, execute the following query:
+-- To verify the accuracy of any totals, execute the following query:
 -- ***********************************************************************************
 -- NOTE: Please enter to SQLCMD mode before running this project by choosing 
 -- from main menu: Query-> SQLCMD Mode for avoiding error while running script.
