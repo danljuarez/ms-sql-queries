@@ -1,11 +1,11 @@
--- ***********************************************************************************
+-- *******************************************************************************************************************************************************
 -- AUTHOR: Daniel Juarez
--- CODE CHALLENGE: Create a list of employees including ID, name, job title, department, and gender, along with their highest total sales by year and month.
+-- DESCRIPTION: Create a list of employees including ID, name, job title, department, and gender, along with their highest total sales by year and month.
 -- Please review how the code has been structured and implemented to follow best practices and improve readability.
 -- **************
 -- NOTE: To download the 'AdventureWork' MS-SQL sample database, you can refer to the following Microsoft GitHub link:
 -- https://github.com/Microsoft/sql-server-samples/releases/tag/adventureworks
--- ***********************************************************************************
+-- *******************************************************************************************************************************************************
 
 USE [AdventureWorks]
 GO
