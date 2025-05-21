@@ -1,13 +1,12 @@
--- ***********************************************************************************
+-- ***************************************************************************************************************************
 -- AUTHOR: Daniel Juarez
--- CREATION DATE: 07/30/2024
 -- DESCRIPTION: Create a table containing a sequence of 60 numbers and identify which of those numbers are Fibonacci numbers.
--- Please take a look at how the code has been structured and implemented, adhering to best practices to improve code readability.
+-- Please review how the code has been structured and implemented to follow best practices and improve readability.
 --
 -- ********************
--- NOTE: Please enter to SQLCMD mode before running this project by choosing
--- from main menu: Query-> SQLCMD Mode for avoiding error while running script.
--- ***********************************************************************************
+-- NOTE: Please enable SQLCMD mode in your SSMS editor before running this project by selecting
+-- Query -> SQLCMD Mode from the main menu. This will help avoid errors when running the script.
+-- ***************************************************************************************************************************
 SET NOCOUNT ON;
 GO
 
