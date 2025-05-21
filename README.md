@@ -23,8 +23,8 @@ Palindrome_Evaluator_script.sql
 Result: <br/>
 ![](./screenshots/screenshot-02.jpg)
 
-## AdventureWorks – SQL Query Demos
-- List all employees with their ID, name, job title, department, gender, and corresponding highest total sales by year and month.
+## AdventureWorks - SQL Query Demos
+- This MS-SQL script list all employees with their name, job title, department and corresponding highest total sales by year and month.
 
     **Take a Look**:
 

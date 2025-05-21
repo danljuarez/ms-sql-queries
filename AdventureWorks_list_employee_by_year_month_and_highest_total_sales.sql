@@ -54,10 +54,10 @@ ORDER BY
 
 
 -- To verify the accuracy of any totals, execute the following query:
--- ***********************************************************************************
--- NOTE: Please enter to SQLCMD mode before running this project by choosing 
--- from main menu: Query-> SQLCMD Mode for avoiding error while running script.
--- ***********************************************************************************
+-- ********************************************************************************************
+-- NOTE: Please enable SQLCMD mode in your SSMS editor before running this project by selecting
+-- Query -> SQLCMD Mode from the main menu. This will help avoid errors when running the script.
+-- ********************************************************************************************
 /**
 -- Declare SalesPersonID variable
 :setvar salesPersonId 277
