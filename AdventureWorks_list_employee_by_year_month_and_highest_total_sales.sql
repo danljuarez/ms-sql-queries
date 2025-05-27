@@ -11,15 +11,15 @@ USE [AdventureWorks]
 GO
 
 SELECT 
-    sp.BusinessEntityID AS SalesPersonID,
-    p.FirstName,
-    p.LastName,
-    e.JobTitle AS Title,
-    d.[Name] AS Department,
-    e.Gender,
-    YEAR(soh.OrderDate) AS OrderYear,
-    MONTH(soh.OrderDate) AS OrderMonth,
-    COUNT(soh.SalesOrderID) AS TotalSales
+    sp.BusinessEntityID AS SalesPersonID
+   ,p.FirstName
+   ,p.LastName
+   ,e.JobTitle AS Title
+   ,d.[Name] AS Department
+   ,e.Gender
+   ,YEAR(soh.OrderDate) AS OrderYear
+   ,MONTH(soh.OrderDate) AS OrderMonth
+   ,COUNT(soh.SalesOrderID) AS TotalSales
 FROM 
     Sales.SalesOrderHeader AS soh
     INNER JOIN
@@ -39,18 +39,18 @@ FROM
 	HumanResources.Department AS d
 	    ON edh.DepartmentID = d.DepartmentID
 GROUP BY
-    sp.BusinessEntityID,
-    p.FirstName,
-    p.LastName,
-    e.JobTitle,
-    d.[Name],
-    e.Gender,
-    YEAR(soh.OrderDate),
-    MONTH(soh.OrderDate)
+    sp.BusinessEntityID
+   ,p.FirstName
+   ,p.LastName
+   ,e.JobTitle
+   ,d.[Name]
+   ,e.Gender
+   ,YEAR(soh.OrderDate)
+   ,MONTH(soh.OrderDate)
 ORDER BY
-    OrderYear,
-    OrderMonth,
-    TotalSales DESC;
+    OrderYear
+   ,OrderMonth
+   ,TotalSales DESC;
 
 
 -- To verify the accuracy of any totals, execute the following query:
